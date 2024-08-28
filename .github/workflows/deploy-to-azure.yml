@@ -1,41 +1,18 @@
 name: Continuous Deployment to Azure
-
-on:
-  push:
-    branches:
-      - main  # Se ejecuta cuando hay un push al branch main
-
+on:  push:
+    branches:      - main  # Se ejecuta cuando hay un push al branch main
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  deploy:    runs-on: ubuntu-latest
     steps:
-    
-      # Checkout code
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Log into Azure
-      - name: Login to Azure
-        uses: azure/login@v1.5.0
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      # Build Docker image and push to Azure Container Registry
-      - name: Build and Push Docker Image
-        env:
-          AZURE_CONTAINER_REGISTRY: ${{ vars.AZURE_PREFIX }}acr
-          AZURE_CONTAINER_APP: ${{ vars.AZURE_PREFIX }}containerapp
-        run: |
-          # Build Docker image
-          docker build -t $AZURE_CONTAINER_REGISTRY.azurecr.io/$AZURE_CONTAINER_APP:latest .
-          # Login to Azure Container Registry
-          az acr login --name $AZURE_CONTAINER_REGISTRY
-          # Push the Docker image to ACR
-          docker push $AZURE_CONTAINER_REGISTRY.azurecr.io/$AZURE_CONTAINER_APP:latest
-
-      # Deploy to Azure Container Apps
-      - name: Deploy to Azure Container Apps
-        run: |
-          az containerapp update --name $AZURE_CONTAINER_APP \
-            --resource-group ${{ vars.AZURE_RG }} \
-            --image $AZURE_CONTAINER_REGISTRY.azurecr.io/$AZURE_CONTAINER_APP:latest
+    - name: Checkout repository      uses: actions/checkout@v3
+    - name: Login to Azure
+      uses: azure/login@v1.5.0      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Build and Deploy Docker Image      env:
+        AZURE_CONTAINER_REGISTRY: ${{vars.AZURE_PREFIX}}acr        AZURE_CONTAINER_APP: ${{vars.AZURE_PREFIX}}containerapp
+      run: |        # Construye la imagen de Docker
+        docker build -t $AZURE_CONTAINER_REGISTRY.azurecr.io/$AZURE_CONTAINER_APP:latest .
+        # Login a Azure Container Registry        az acr login --name $AZURE_CONTAINER_REGISTRY
+        # Subir la imagen a ACR
+        docker push $AZURE_CONTAINER_REGISTRY.azurecr.io/$AZURE_CONTAINER_APP:latest
+        # Actualizar la Azure Container App con la nueva imagen        az containerapp update --name $AZURE_CONTAINER_APP --resource-group ${{ vars.AZURE_RG }} --image $AZURE_CONTAINER_REGISTRY.azurecr.io/$AZURE_CONTAINER_APP:latest
