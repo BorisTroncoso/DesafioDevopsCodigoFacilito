@@ -1,29 +1,12 @@
-name: Create Azure Resources
-
-on: [workflow_dispatch]
-
+name: Deploy Azure Resources
+on:  workflow_dispatch: # Permite ejecutar el workflow manualmente desde GitHub Actions
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  deploy:    runs-on: ubuntu-latest
     steps:
-    
-      # Checkout code
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      # Log into Azure
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      # Deploy Bicep file to create Azure resources
-      - name: Create resources
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ vars.AZURE_RG }}
-          template: ${{ github.workspace }}/config/main.bicep
-          parameters: |
-            namePrefix=${{ vars.AZURE_PREFIX }}
-          failOnStdErr: false
+    - name: Checkout repository      uses: actions/checkout@v2
+    - name: Login to Azure
+      uses: azure/login@v1      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Deploy resources using Bicep      uses: azure/cli@v1
+      with:        inlineScript: |
+          az deployment group create --resource-group ${{ vars.AZURE_RG }} --template-file ./config/main.bicep --parameters namePrefix=${{ vars.AZURE_PREFIX }}
