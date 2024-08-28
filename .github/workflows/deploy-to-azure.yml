@@ -20,8 +20,8 @@ jobs:
 
     - name: Build and Deploy Docker Image
       env:
-        AZURE_CONTAINER_REGISTRY: ${{ vars.AZURE_PREFIX }}acr
-        AZURE_CONTAINER_APP: ${{ vars.AZURE_PREFIX }}containerapp
+        AZURE_CONTAINER_REGISTRY: ${{vars.AZURE_PREFIX}}acr
+        AZURE_CONTAINER_APP: ${{vars.AZURE_PREFIX}}containerapp
       run: |
         # Construye la imagen de Docker
         docker build -t $AZURE_CONTAINER_REGISTRY.azurecr.io/$AZURE_CONTAINER_APP:latest .
