@@ -20,7 +20,6 @@ jobs:
 
     - name: Build and Deploy Docker Image
       env:
-        AZURE_PREFIX: "pets_workSHop45"
         AZURE_CONTAINER_REGISTRY: ${{ vars.AZURE_PREFIX }}acr
         AZURE_CONTAINER_APP: ${{ vars.AZURE_PREFIX }}containerapp
       run: |
