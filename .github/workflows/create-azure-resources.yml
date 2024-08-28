@@ -1,5 +1,6 @@
 name: Deploy Azure Resources
-on:  workflow_dispatch: # Permite ejecutar el workflow manualmente desde GitHub Actions
+on:  workflow_dispatch: 
+# Permite ejecutar el workflow manualmente desde GitHub Actions
 jobs:
   deploy:    runs-on: ubuntu-latest
     steps:
