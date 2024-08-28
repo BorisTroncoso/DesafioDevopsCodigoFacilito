@@ -20,4 +20,4 @@ jobs:
       uses: azure/cli@v1
       with:
         inlineScript: |
-          az deployment group create --resource-group ${{ vars.AZURE_RG }} --template-file ./config/main.bicep --parameters namePrefix=${{ vars.AZURE_PREFIX }}
+          az deployment group create --resource-group ${{ vars.AZURE_RG }} --template-file config/main.bicep --parameters namePrefix=${{ vars.AZURE_PREFIX }}
